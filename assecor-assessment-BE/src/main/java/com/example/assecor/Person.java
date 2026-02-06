@@ -12,12 +12,21 @@ public class Person {
     private String lastname;
     private int zipcode;
     private String city;
-    private String color;
+    private int color;
 
     public Person(){
     }
 
-    public Person(String name, String lastname, int zipcode, String city, String color){
+    public Person(String name, String lastname, int zipcode, String city, int color){
+        this.name = name;
+        this.lastname = lastname;
+        this.zipcode = zipcode;
+        this.city = city;
+        this.color = color;
+    }
+
+    public Person(String id, String name, String lastname, int zipcode, String city, int color){
+        this.id = id;
         this.name = name;
         this.lastname = lastname;
         this.zipcode = zipcode;
@@ -35,11 +44,11 @@ public class Person {
 
     }
 
-    public String getColor() {
+    public int getColor() {
         return color;
     }
 
-    public void setColor(String color) {
+    public void setColor(int color) {
         this.color = color;
     }
 
