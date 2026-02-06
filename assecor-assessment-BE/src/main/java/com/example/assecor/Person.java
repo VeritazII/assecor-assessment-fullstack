@@ -17,7 +17,7 @@ public class Person {
     public Person(){
     }
 
-    public Person(String name, String lastname, int zipcode, String city, int color){
+    public Person(String lastname, String name, int zipcode, String city, int color){
         this.name = name;
         this.lastname = lastname;
         this.zipcode = zipcode;
@@ -25,7 +25,7 @@ public class Person {
         this.color = color;
     }
 
-    public Person(String id, String name, String lastname, int zipcode, String city, int color){
+    public Person(String id, String lastname, String name, int zipcode, String city, int color){
         this.id = id;
         this.name = name;
         this.lastname = lastname;
@@ -36,8 +36,8 @@ public class Person {
 
     @Override
     public String toString() {
-        return  name + ", " +
-                lastname + ", " +
+        return  lastname + ", " +
+                name + ", " +
                 zipcode + ", " +
                 city + ", " +
                 color + ",\n";

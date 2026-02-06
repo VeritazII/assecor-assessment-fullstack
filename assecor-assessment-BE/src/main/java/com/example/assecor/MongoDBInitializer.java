@@ -21,12 +21,9 @@ public class MongoDBInitializer implements CommandLineRunner {
         }
         long count = mongoTemplate.count(new Query(), Person.class);
         if (count == 0) {
-        mongoTemplate.save(new Person("Max", "Mustermann", 12345, "Musterstadt", 2));
-        mongoTemplate.save(new Person("Sophie", "Sonnenschein", 44444, "Skyline", 5));
-        mongoTemplate.save(new Person("Rebecca", "Rage", 51423, "Rüpelingen", 4));
-            System.out.println("MongoDB erfolgreich gefüllt!");
+
         } else {
-            System.out.println("MongoDB bereits gefüllt mit " + count + " Einträgen");
+            System.out.println("MongoDB already filled with " + count + " persons");
         }
     }
 }
