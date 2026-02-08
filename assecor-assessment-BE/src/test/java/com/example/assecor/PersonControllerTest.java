@@ -31,7 +31,6 @@ class PersonControllerTest {
 
     @Test
     void shouldReturnAllPersons() throws Exception {
-
         Mockito.when(personRepository.findAll()).thenReturn(List.of(validPerson1, validPerson2));
 
         mockMvc.perform(get("/persons"))
@@ -86,7 +85,7 @@ class PersonControllerTest {
     void shouldIgnoreInvalidCsvLine() throws Exception {
         String csv =
                 "Bart, Bertram, \n" +
-                "12313 Wasweißich, 1";
+                        "12313 Wasweißich, 1";
 
         MockMultipartFile file = new MockMultipartFile(
                 "file",
@@ -98,5 +97,58 @@ class PersonControllerTest {
         mockMvc.perform(multipart("/persons/import").file(file))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Imported 0 persons")));
+    }
+
+    @Test
+    void shouldUpdatePersonField() throws Exception {
+        Mockito.when(personRepository.findById("1"))
+                .thenReturn(Optional.of(validPerson1));
+        Mockito.when(personRepository.save(Mockito.any(Person.class)))
+                .thenReturn(validPerson1);
+
+        String updateJson = "{\"name\":\"Peter\",\"color\":5}";
+
+        mockMvc.perform(patch("/persons/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.name").value("Peter"))
+                .andExpect(jsonPath("$.color").value(5));
+
+        Mockito.verify(personRepository).save(Mockito.any(Person.class));
+    }
+
+    @Test
+    void shouldReturnNotFoundWhenUpdatingNonExistentPerson() throws Exception {
+        Mockito.when(personRepository.findById("999"))
+                .thenReturn(Optional.empty());
+
+        String updateJson = "{\"name\":\"Peter\"}";
+
+        mockMvc.perform(patch("/persons/999")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(updateJson))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldCreateNewPerson() throws Exception {
+
+        Mockito.when(personRepository.save(Mockito.any(Person.class)))
+                .thenReturn(validPerson2);
+
+        String personJson = "{\"lastname\":\"Johnson\",\"name\":\"Johnny\",\"zipcode\":88888,\"city\":\"made up\",\"color\":3}";
+
+        mockMvc.perform(post("/persons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(personJson))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.lastname").value("Johnson"))
+                .andExpect(jsonPath("$.name").value("Johnny"))
+                .andExpect(jsonPath("$.zipcode").value(88888))
+                .andExpect(jsonPath("$.city").value("made up"))
+                .andExpect(jsonPath("$.color").value(3));
+
+        Mockito.verify(personRepository).save(Mockito.any(Person.class));
     }
 }
