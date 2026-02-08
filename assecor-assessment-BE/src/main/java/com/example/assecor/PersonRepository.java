@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PersonReposetory extends MongoRepository<Person, String> {
+public interface PersonRepository extends MongoRepository<Person, String> {
 
-    List<Person> findByColor(String color);
+    List<Person> findByColor(int color);
 }

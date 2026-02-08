@@ -17,14 +17,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-@WebMvcTest(RESTController.class)
-class RESTControllerTest {
+@WebMvcTest(PersonController.class)
+class PersonControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockitoBean
-    private PersonReposetory personReposetory;
+    private PersonRepository personRepository;
 
     Person validPerson1 = new Person("Müller", "Hans", 67742, "Lauterecken", 1);
     Person validPerson2 = new Person("Johnson", "Johnny", 88888, "made up", 3);
@@ -32,33 +32,33 @@ class RESTControllerTest {
     @Test
     void shouldReturnAllPersons() throws Exception {
 
-        Mockito.when(personReposetory.findAll()).thenReturn(List.of(validPerson1, validPerson2));
+        Mockito.when(personRepository.findAll()).thenReturn(List.of(validPerson1, validPerson2));
 
         mockMvc.perform(get("/persons"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(2))
-                .andExpect(jsonPath("$[0].name").value("Müller"))
+                .andExpect(jsonPath("$[0].lastname").value("Müller"))
                 .andExpect(jsonPath("$[1].city").value("made up"));
     }
 
     @Test
     void shouldReturnPersonById() throws Exception {
-        Mockito.when(personReposetory.findById("1"))
+        Mockito.when(personRepository.findById("1"))
                 .thenReturn(Optional.of(validPerson2));
 
         mockMvc.perform(get("/persons/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Johnson"));
+                .andExpect(jsonPath("$.lastname").value("Johnson"));
     }
 
     @Test
     void shouldReturnPersonsByColor() throws Exception {
-        Mockito.when(personReposetory.findByColor("3"))
+        Mockito.when(personRepository.findByColor(3))
                 .thenReturn(List.of(validPerson2));
 
         mockMvc.perform(get("/persons/color/3"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].lastname").value("Johnny"));
+                .andExpect(jsonPath("$[0].name").value("Johnny"));
     }
 
     @Test
@@ -78,8 +78,8 @@ class RESTControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Imported 2 persons")));
 
-        Mockito.verify(personReposetory).deleteAll();
-        Mockito.verify(personReposetory).saveAll(Mockito.anyList());
+        Mockito.verify(personRepository).deleteAll();
+        Mockito.verify(personRepository).saveAll(Mockito.anyList());
     }
 
     @Test
