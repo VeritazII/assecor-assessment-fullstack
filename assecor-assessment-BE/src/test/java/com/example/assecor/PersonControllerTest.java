@@ -63,8 +63,10 @@ class PersonControllerTest {
     @Test
     void shouldImportCsvSuccessfully() throws Exception {
         String csv =
-                "Andersson, Anders, 32132 Schweden - ☀, 2\n" +
-                        "Millenium, Milly, 77777 made up too, 4\n";
+                """
+                        Andersson, Anders, 32132 Schweden - ☀, 2
+                        Millenium, Milly, 77777 made up too, 4
+                        """;
 
         MockMultipartFile file = new MockMultipartFile(
                 "file",
